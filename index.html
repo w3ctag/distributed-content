@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Polyfills and the evolution of the Web</title>
+  <meta charset='utf-8'>
+  <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+  <script class='remove'>
+    var respecConfig = {
+      specStatus: "finding",
+      shortName: "distributed-content",
+      publishDate: "2017-05-18",
+      format: "markdown",
+      editors: [
+        { name: "Andrew Betts", url: "https://trib.tv/" }
+      ],
+      otherLinks: [{
+        key: 'Participate',
+        data: [
+          { value: 'File a bug', href: 'https://github.com/w3ctag/distributed-content/issues'},
+          { value: 'Commit history', href: 'https://github.com/w3ctag/distributed-content/commits/gh-pages'},
+          { value: 'Mailing list', href: 'https://lists.w3.org/Archives/Public/www-tag/'}
+        ]
+      }],
+      wg: "Technical Architecture Group",
+      wgURI: "https://www.w3.org/2001/tag/",
+      wgPublicList: "www-tag",
+      wgPatentURI: "https://www.w3.org/2001/tag/disclosures",
+      edDraftURI: "https://w3ctag.github.io/distributed-content/"
+    };
+  </script>
+</head>
+<body>
+
+  <section id="abstract">
+
+    The web has long had formats and mechanisms whereby content which canonically exists at one location is also available in a different form in a different location.  Some of the oldest examples include [RSS](https://en.wikipedia.org/wiki/RSS) and other machine readable syndication formats, and the newest include content platforms such as [Blendle](https://blendle.com/), Facebook's [instant articles](https://developers.facebook.com/docs/instant-articles) and Google's [AMP top stories](https://developers.google.com/search/docs/data-types/articles) carousel.
+
+    This raises important issues concerning the [primacy of URLs](https://www.w3.org/TR/webarch/#identification) and [origins](https://www.w3.org/TR/2011/WD-html5-20110405/origin-0.html) on the web, and the ability for users to make judgements about the trustworthiness and provenance of information they encounter while using it.
+
+    Distributed content has compelling use cases and is well supported by fundamental web technologies such as hyperlinks and iframes, but some newer approaches can present security and privacy challenges.
+
+  </section>
+
+  <section id="sotd">
+
+    This document has been produced by the [<abbr title="World Wide Web Consortium">W3C </abbr> Technical Architecture Group (TAG)](https://www.w3.org/2001/tag/).
+
+    <!--The TAG approved this finding at its [February 2017 face to face meeting](https://github.com/w3ctag/meetings/tree/gh-pages/2017/02-boston).-->
+    **This finding is currently a draft, and does not represent the consensus view of the TAG.** Please send comments on this finding to the publicly archived TAG mailing list [www-tag@w3.org](mailto:www-tag@w3.org) ([archive](https://lists.w3.org/Archives/Public/www-tag/)).
+
+  </section>
+
+  <section id='trends'>
+
+    ## Trends in distributed content patterns
+
+    Distributed content is changing:
+
+    * **Increased visual/functional fidelity:** Distributed forms of content can use advanced web platform features and sophisticated styling, making it hard to distinguish from the original.
+    * **Less attribution:** Often, the distributed form does not provide a browser-verified, user-visible indication of the source origin.
+    * **More frequently complete:** The distributed form is increasingly a complete copy of the canonical form rather than a teaser or abstract
+    * **Less canonical source referencing:** Distributed forms sometimes do not link to the canonical form in a standardised way, such as a `<link rel='canonical'>` or `<link>` tag.
+
+  </section>
+
+  <section id='concerns'>
+
+    ## Potential concerns
+
+    Distributed content presents the greatest challenge to web architecture when it is high fidelity, has unclear attribution, is complete, lacks a reference to the canonical source, is distributed at scale, and is discovered serendipitously rather than via a conscious-choice opt-in mechanism. These challenges present as:
+
+    * **Source/provenance masking:** User agents go to considerable lengths to expose the source of a web page to the user, including a visible URL bar, colourising of domains, TLS certificate labelling, etc. Distributed content may include labelling and/or branding within the web UI in an attempt to replicate the user agent's native behaviours, but this is a poor substitute for browser-level labelling, since it is free to mislead.
+    * **Origin policy:** The web applies many security, privacy, and quota constraints to websites using the concept of an [Origin](https://www.w3.org/TR/2011/WD-html5-20110405/origin-0.html).  Distributed forms of content lose the connection to these policies when consumed on distribution platforms.
+    * **Permissions:** Many features of the web require explicit user consent which is then attached to the entire origin. Distributed content that requires such permissions would result in a degraded experience when consumed off-origin, or the permission potentially being assigned to the distribution platform origin.
+    * **TLS:** URLs and origins when combined with TLS and the PKI system provide the canonical proof of provenance of content. Distributed content does not rely on the trust badge of the content creator but rather that of the delivery platform, rendering the efforts of labelling and validating TLS status largely redundant.
+    * **URL fragmentation/pollution:** Creating multiple URLs for the same content reduces the value of URLs as a means of identifying things, especially when sharing and linking to content via platforms such as social media.
+
+    The web platform has, over time, developed defenses against malicious content which lean on the ability for URLs and Origins to be a primary indicator of identity and trust, such as:
+
+    * X-Frame-Options
+    * Visibility of URL bar in popup windows
+    * Punycode/unicode deobfuscation in URL bar
+    * Crowdsourced phishing blocklists and safe browsing lists
+
+    Many of these defenses, which are designed to protect users, can be undermined by mechanisms for serving distributed content.
+
+  </section>
+
+  <section id='recommendations'>
+
+    ## Recommendations
+
+    Sites which facilitate the consumption of distributed content should make efforts to avoid the concerns outlined above. The TAG believes in and [hopes to strengthen the origin model](https://www.w3.org/2001/tag/doc/web-https), and has encouraged the [Web App Sec WG](https://www.w3.org/2011/webappsec/) in their work on [Secure Contexts](https://w3c.github.io/webappsec-secure-contexts/).
+
+    The IFRAME element is designed to allow content from one website to be included on another, whilst retaining all the features of the web platform.  We encourage distribution platforms to use this mechanism where appropriate. We encourage the loading of pages from original source origins, rather than re-hosted, non-canonical locations.
+
+    Other potential solutions may include:
+
+    * **Packaging:** Progressing the [packaging work](https://github.com/dimich-g/webpackage) that had been [initiated by the TAG](https://github.com/w3ctag/packaging-on-the-web), a signed package format could carry the verifiable blessing of the original origin and enable the content to be labelled as and executed within the context of that origin by the browser.
+    * **Prerendering:** Where the motivation for embedding is to improve performance, an alternative is to support the limited pre-rendering of a document prior to navigation. Past efforts at this have included `<link rel=prerender>` but this proved difficult to do without side effects. A more modest approach, supported by constraints that could be enforced by Feature Policy, may be a practical option.
+    * **Opaque IFRAMEs:** HTML sandbox, seamless, CSP and feature policy have all sought to provide more granular controls over the behaviour and capabilities of IFRAMEs. It seems conceivable that some combination of these controls could bestow a "right" for site A to frame site B in a way that gives site B no recourse to escape the frame or prohibit the framing via X-Frame-Options.
+
+    Discussion of new feature development is beyond the scope of a TAG finding, but we stress that we are open to the architecture of the web evolving and changing to accommodate user needs in a way that is compatible with its core purpose and principles.
+
+  </section>
+
+</body>
+</html>
