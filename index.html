@@ -33,9 +33,9 @@
 
   <section id="abstract">
 
-    The web has long had formats and mechanisms whereby content which canonically exists at one location is also available in a different form in a different location.  Some of the oldest examples include [RSS](https://en.wikipedia.org/wiki/RSS) and other machine readable syndication formats, and the newest include content platforms such as [Blendle](https://blendle.com/), Facebook's [instant articles](https://developers.facebook.com/docs/instant-articles) and Google's [AMP top stories](https://developers.google.com/search/docs/data-types/articles) carousel.
+    The web has long supported the idea of content which canonically exists at one location also being available in a different form in a different location.  Some of the oldest examples are [RSS](https://en.wikipedia.org/wiki/RSS) and other machine readable syndication formats, and the newest include content platforms such as [Blendle](https://blendle.com/), Facebook's [instant articles](https://developers.facebook.com/docs/instant-articles) and Google's [AMP top stories](https://developers.google.com/search/docs/data-types/articles) carousel.
 
-    This raises important issues concerning the [primacy of URLs](https://www.w3.org/TR/webarch/#identification) and [origins](https://html.spec.whatwg.org/multipage/origin.html#origin) on the web, and the ability for users to make judgments about the trustworthiness and provenance of information they encounter while using it.
+    This raises important issues concerning the [primacy of URLs](https://www.w3.org/TR/webarch/#identification) and [origins](https://html.spec.whatwg.org/multipage/origin.html#origin), and the ability for users to make judgments about the trustworthiness and provenance of the information they find while using the web.
 
     Distributed content has compelling use cases and is well supported by fundamental web technologies such as hyperlinks and iframes, but some newer approaches can present security and privacy challenges.
 
@@ -53,7 +53,7 @@
 
     ## Definitions
 
-    While the word 'syndicated' has been long used to describe the republishing of content by a third party, the emergence and growth of a new generation of mostly proprietary platforms has prompted the use of a new term within the media industry.  We note that the term 'distributed content' has gained acceptance in that community (cf. the annual [Reuters Institute Digital News Report](http://www.digitalnewsreport.org/survey/2016/overview-key-findings-2016)), and that while the general mechanism can be applied to almost any kind of content, the most popular use case to date has been news.
+    The word 'syndicated' has been long used to describe the republishing of content by someone other than the author, but the emergence and growth of a new generation of mostly proprietary platforms has prompted the use of a new term in the media industry.  We recognise that the term 'distributed content' has gained acceptance in that community (cf. the annual [Reuters Institute Digital News Report](http://www.digitalnewsreport.org/survey/2016/overview-key-findings-2016)), and although the general mechanism of syndication on a proprietary platform can be applied to almost any kind of content, the most popular use case until now has been news.
 
     In recognition of this, we use the term 'distributed content' in this finding, but do not intend to restrict the scope of the finding to news.
 
@@ -63,11 +63,11 @@
 
     ## Trends in distributed content patterns
 
-    While there is no specification defining how distributed content platforms work or the behavior or features they exhibit to the user, modern distributed content platforms are characterized by the following trends:
+    There is no specification that defines how distributed content platforms work or the behavior or features they exhibit to the user.  However, modern distributed content platforms are characterized by the following trends:
 
     * **Less attribution:** Often, the distributed form does not provide a browser-verified, user-visible indication of the source origin.
     * **Increased visual/functional fidelity:** Distributed forms of content can use advanced web platform features and sophisticated styling, making it hard to distinguish from the original.
-    * **More frequently complete:** The distributed form is increasingly a complete copy of the canonical form rather than a teaser or abstract
+    * **More frequently complete:** The distributed form is often a complete copy of the canonical form rather than a teaser or abstract
     * **Less canonical source referencing:** Distributed forms sometimes do not link to the canonical form in a standardized way, such as a `<link rel='canonical'>` or `<link>` tag.
 
   </section>
@@ -76,22 +76,22 @@
 
     ## Potential concerns
 
-    Distributed content presents the greatest challenge to web architecture when it is high fidelity, has unclear attribution, is complete, lacks a reference to the canonical source, is distributed at scale, and is discovered serendipitously rather than via a conscious-choice opt-in mechanism. These challenges present as:
+    Distributed content presents the greatest challenge to web architecture when it is high fidelity, has unclear attribution, is complete, lacks a reference to the canonical source, is distributed at scale, and is discovered serendipitously rather than via a deliberate choice. These challenges present as:
 
-    * **Source/provenance masking:** User agents go to considerable lengths to expose the source of a web page to the user, including a visible URL bar, colorizing of domains, TLS certificate labeling, etc. Distributed content may include labeling and/or branding within the web UI in an attempt to replicate the user agent's native behaviors, but this is a poor substitute for browser-level labeling, since it is free to mislead.
+    * **Source/provenance masking:** User agents make great efforts to expose the source of a web page to the user, including a visible URL bar, color-coding of domains, TLS certificate labeling, etc. Distributed content may include labeling and/or branding within the web UI in an attempt to replicate the user agent's native behaviors, but this is a poor substitute for browser-level labeling, since it is free to mislead.
     * **Origin policy:** The web applies many security, privacy, and quota constraints to websites using the concept of an [origin](https://html.spec.whatwg.org/multipage/origin.html#origin).  Distributed forms of content lose the connection to these policies when consumed on distribution platforms.
     * **Permissions:** Many features of the web require explicit user consent which is then attached to the entire origin. Distributed content that requires such permissions would result in a degraded experience when consumed off-origin, or the permission potentially being assigned to the distribution platform origin.
-    * **TLS:** URLs and origins when combined with TLS and the PKI system provide the canonical proof of provenance of content. Distributed content does not rely on the trust badge of the content creator but rather that of the delivery platform, rendering the efforts of labeling and validating TLS status largely redundant.
+    * **TLS:** URLs and origins when combined with TLS and the PKI system provide the canonical proof of provenance of content. When a user agent identifies and authenticates the source of a page of distributed content, it shows the distribution platform, not the original creator.  This makes the efforts of labeling and validating TLS status largely redundant.
     * **URL fragmentation/pollution:** Creating multiple URLs for the same content reduces the value of URLs as a means of identifying things, especially when sharing and linking to content via platforms such as social media.  This problem is particularly bad when the distinct URLs exist on different origins, for example, `m.`, `wap.`, `app.`, `.mobi` etc.
 
-    The web platform has, over time, developed defenses against malicious content which lean on the ability for URLs and Origins to be a primary indicator of identity and trust, such as:
+    The web platform has defenses against malicious content which depend on the ability for URLs and Origins to be a primary indicator of identity and trust, such as:
 
     * X-Frame-Options
     * Visibility of URL bar in popup windows
     * Punycode/unicode deobfuscation in URL bar
     * Crowdsourced phishing blocklists and safe browsing lists
 
-    Many of these defenses, which are designed to protect users, can be undermined by mechanisms for serving distributed content that conflate the content of many origins within a single origin or remove content from its source.
+    Many of these defenses, which are designed to protect users, can be undermined by mechanisms for serving distributed content that combine the content of many origins within a single origin or remove content from its source.
 
   </section>
 
@@ -99,19 +99,19 @@
 
     ## Recommendations
 
-    Sites which facilitate the consumption of distributed content should make efforts to avoid the concerns outlined above. The TAG believes in and [hopes to strengthen the origin model](https://www.w3.org/2001/tag/doc/web-https), and has encouraged the [Web App Sec WG](https://www.w3.org/2011/webappsec/) in their work on [Secure Contexts](https://w3c.github.io/webappsec-secure-contexts/).
+    Sites which allow users to consume distributed content should make efforts to avoid the concerns outlined above. The TAG believes in and [hopes to strengthen the origin model](https://www.w3.org/2001/tag/doc/web-https), and has encouraged the [Web App Sec WG](https://www.w3.org/2011/webappsec/) in their work on [Secure Contexts](https://w3c.github.io/webappsec-secure-contexts/).
 
     The TAG finds that it is essential to emphasize the value of the browser-level origin authenticity built into the Web platform as opposed to mechanisms that an untrusted content platform may choose to provide.  Browsers are literally the "user's agent", and the model of the browser as a trusted gateway protecting the user from untrusted content is fundamental to balancing the needs of the user with the motivations of website owners, and therefore fundamental to the architecture of the Web.
 
-    The [anchor element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element) is designed to allow one website to refer visitors to content on another website, whilst retaining all the features of the web platform.  We encourage distribution platforms to use this mechanism where appropriate. We encourage the loading of pages from original source origins, rather than re-hosted, non-canonical locations.  We further discourage rewriting links within content with the purpose of keeping a user within a distribution platform.
+    The [anchor element](https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element) is designed to allow one website to refer visitors to content on another website, and retains all the features of the web platform.  We encourage distribution platforms to use the anchor element where appropriate. We encourage the loading of pages from original source origins, rather than re-hosted, non-canonical locations.  We strongly discourage rewriting links within content with the purpose of keeping a user within a distribution platform.
 
     Other potential solutions may include:
 
-    * **Prerendering:** Where the motivation for embedding is to improve performance, an alternative is to support the limited pre-rendering of a document prior to navigation. Past efforts at this have included `<link rel=prerender>` but this proved difficult to do without side effects. A more modest approach, supported by constraints that could be defined and declared by a browser and enforced by [Feature Policy](https://wicg.github.io/feature-policy/), may be a practical option, taking due consideration of privacy concerns.
-    * **Opaque IFRAMEs:** [HTML sandbox](https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox), seamless (since [removed](https://github.com/whatwg/html/issues/331)), [CSP](https://www.w3.org/TR/CSP1/) and [feature policy](https://wicg.github.io/feature-policy/) have all sought to provide more granular controls over the behavior and capabilities of IFRAMEs. It seems conceivable that some combination of these controls, a requirement for the IFRAME to own the URL bar, and restrictions on the ability of the framing site to obscure the IFRAME's content could provide sufficient protections to a framed site to bestow a "right" for another site to frame it in a way that gives the framed site no recourse to escape the frame or prohibit the framing.
+    * **Prerendering:** Where the motivation for embedding is to improve performance, an alternative is to support the limited pre-rendering of a document before navigating to it. Past efforts at this have included `<link rel=prerender>` but this was difficult to do without side effects. A more limited solution, with constraints that could be defined and declared by a browser and enforced by [Feature Policy](https://wicg.github.io/feature-policy/), may be a practical option, taking account of privacy concerns.
+    * **Opaque IFRAMEs:** [HTML sandbox](https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox), seamless (since [removed](https://github.com/whatwg/html/issues/331)), [CSP](https://www.w3.org/TR/CSP1/) and [feature policy](https://wicg.github.io/feature-policy/) have all sought to provide more granular controls over the behavior and capabilities of IFRAMEs. It seems possible that some combination of these controls, a requirement for the IFRAME to own the URL bar, and restrictions on the ability of the framing site to obscure the IFRAME's content, could provide sufficient protections to a framed site to bestow a "right" for another site to frame it in a way that gives the framed site no recourse to escape the frame or prohibit the framing.
     * **Packaging:** Progressing the [packaging work](https://github.com/dimich-g/webpackage) that had been [initiated by the TAG](https://github.com/w3ctag/packaging-on-the-web), a signed package format could carry the verifiable blessing of the original origin and enable the content to be labeled as and executed within the context of that origin by the browser, despite being served by a different origin. While this might enable a privacy-respecting method for pre-rendering content, any attempt to combine the packaged content with UI from the host site may encounter similar problems to the opaque IFRAME solution described above.
 
-    Discussion of new feature development is beyond the scope of this TAG finding, but we stress that we are open to the architecture of the web evolving and changing to accommodate user needs in a way that is compatible with its core purpose and principles.
+    Discussion of new feature development is beyond the scope of this TAG finding, but we are open to the architecture of the web evolving and changing to accommodate user needs in a way that is compatible with its core purpose and principles.
 
   </section>
 
